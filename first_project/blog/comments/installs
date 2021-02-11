@@ -1,0 +1,10 @@
+Generic express app
+
+Run
+`npm init -y`
+`npm install express cors axios nodemon`
+
+express: app
+cors: for cors
+axios:
+nodemon: to run everything
