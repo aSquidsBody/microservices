@@ -1,0 +1,8 @@
+run
+
+'npm init -y'
+'npm install express nodemon axios'
+
+express: app
+axios:
+nodemon: to run everything
