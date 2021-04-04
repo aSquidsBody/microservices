@@ -8,6 +8,7 @@ FROM alpine
 
 # Download and install a dependency
 # apk is a package manager that comes pre-installed in alpine
+RUN apk add --update gcc
 RUN apk add --update redis
 
 # Tell the image what to do when it starts as a container

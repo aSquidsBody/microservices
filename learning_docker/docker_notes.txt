@@ -2,7 +2,7 @@ DOCKER CLI:
 	
 	create <image-name>: create container
 	start <id>: start container
-	run (-it) <image-name> <command>: create and start container
+	run (-it) (-p <local_port>:<container_port>) <image-name> <command>: create and start container
 		<command> is optional, if so, use '-it'. possible <command> == sh
 	stop <id>: stop container
 	kill <id>: kill container
@@ -26,5 +26,18 @@ Inside Dockerfile, follow this flow:
 
 To build an image: 'docker build .' from the same directory as the Dockerfile. The image id will
 show up in the 'writing image sha256:<image_id>'
+	* Tag -t for <dockerID>/<repo||project_name>:<version> as new tag (-t joesjoski/redis:latest)
 
 Can create, run, and start the image like normal.
+
+MANUAL IMAGE GENERATION WITH DOCKER COMMIT
+	1. Start a container, e.g.  'docker run -it alpine sh'
+	2. Do stuff, e.g. 'apk add --update redis'
+	3. Generate an image from the running container, e.g. in another window:
+		windows: 'docker commit -c "CMD 'redis-server'" <container_id>'
+		macOS/linux: 'docker commit -c 'CMD ["redis-server"]' <container_id>'
+	4. The output is the image id. (don't need to copy the whole thing. Docker is 
+		smart enough to tell what the image that you want is.)
+
+
+.dockerignore to ignore copying files in Dockerfile
