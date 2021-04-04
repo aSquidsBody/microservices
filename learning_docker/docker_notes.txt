@@ -1,0 +1,30 @@
+DOCKER CLI:
+	
+	create <image-name>: create container
+	start <id>: start container
+	run (-it) <image-name> <command>: create and start container
+		<command> is optional, if so, use '-it'. possible <command> == sh
+	stop <id>: stop container
+	kill <id>: kill container
+
+	ps: show all running container (--all shows every container ever started)
+
+	system prune: remove all containers
+
+	exec -it <id> <command>: run a command in a running container
+		<command> == sh (shell): gives terminal access in the container
+		-it lets us see the I/O from the command
+
+
+
+IMAGES:
+Create Dockerfile -> Docker Client -> Docker Server -> Usable Image!
+Inside Dockerfile, follow this flow:
+	1. Specify base image
+	2. Run some additional programs
+	3. Specify a command to run on startup.
+
+To build an image: 'docker build .' from the same directory as the Dockerfile. The image id will
+show up in the 'writing image sha256:<image_id>'
+
+Can create, run, and start the image like normal.
