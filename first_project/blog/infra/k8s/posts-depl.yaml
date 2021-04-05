@@ -1,0 +1,19 @@
+apiVersion: apps/v1 # pods in v1, but we have deployment, so need apps/v1
+kind: Deployment
+metadata:
+  name: posts-depl
+spec:
+  replicas: 1 # number of pods
+  selector: # select according to the following rule
+    matchLabels: # "look for all pods that are created with label 'app': posts"
+      app: posts
+
+  template:
+    # configure the pod
+    metadata:
+      labels:
+        app: posts # assign label 'app': posts
+    spec:
+      containers:
+        - name: posts
+          image: joesjoski/posts:latest # or joesjoski/posts without the tag

@@ -1,0 +1,42 @@
+MINIKUBE USES DOCKER DRIVER BY DEFAULT ON 'minikube start', so use
+* minikube start --vm=true
+OR * minikube start --driver=hyperv
+OR * minikube start --driver=virtualbox
+
+STARTING (after kubernetes enabled in docker app)
+    RUN 'kubectl version' to check if it is running
+
+mkdir infra\k8s (infrastructure and kubernetes) for the yaml files
+
+YAML FILE:
+    '-' (dash) means array element,
+    e.g.
+        - name: my_name
+          image: my_image
+        - name: my_other_name
+          image: my_other_image
+
+COMMON KUBERNETES COMMANDs
+    'kubectl apply -f <config_file_name>': tells kubernetes to process the config
+
+    'kubectl get pods': list out pods
+    'kubectl exec -it <pod_name> <cmd>': run command in pod
+    'kubectl logs <pod_name>': print logs (console messages and logs)
+    'kubectl delete pod <pod_name>': deletes pod
+    'kubectl describe pod <pod_name>': print out pod info
+
+    'kubectl get deployments': list out deployments
+    'kubectl exec -it <deployment_name> <cmd>': run command in deployment_name
+    'kubectl delete deployment <deployment_name>': deletes deployment
+    'kubectl describe deployment <deployment_name>': print out deployment info
+
+VERSION CONTROL & UPDATES FOR DEPLOYMENTS
+    1. Build docker images with defaul 'latest' tag
+    2. Push docker images to dockerhub using 'docker push <image_name>'
+    3. Restart the deployment 'kubectl rollout restart deployment <deployment_name>
+
+NETWORKING:
+    Cluster IP: sets up URL to access a pod. Only exposes pods in the Cluster
+    Node Port: (For dev only) used to access pods from OUTSIDE the Cluster
+    Load Balancer: Makes a pod available from outside the outside world
+    External Name: Redirects an in-cluster request to a CNAME url.
