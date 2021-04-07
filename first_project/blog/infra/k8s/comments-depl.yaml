@@ -1,35 +1,35 @@
-# This is the yaml for the posts deployment
+# This is the yaml for the comments deployment
 
 apiVersion: apps/v1 # pods in v1, but we have deployment, so need apps/v1
 kind: Deployment
 metadata:
-  name: posts-depl
+  name: comments-depl
 spec:
   replicas: 1 # number of pods
   selector: # select according to the following rule
-    matchLabels: # "look for all pods that are created with label 'app': posts"
-      app: posts
+    matchLabels: # "look for all pods that are created with label 'app': comments"
+      app: comments
 
   template:
     # configure the pod
     metadata:
       labels:
-        app: posts # assign label 'app': posts
+        app: comments # assign label 'app': comments
     spec:
       containers:
-        - name: posts
-          image: joesjoski/posts:latest # or joesjoski/posts without the tag
+        - name: comments
+          image: joesjoski/comments:latest # or joesjoski/comments without the tag
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: posts-clusterip-srv
+  name: comments-srv
 spec:
   selector: # select pods which traffic will be directed to (look for label)
-    app: posts # label to look for
+    app: comments # label to look for
   type: ClusterIP # (optional) Service defaults to type: ClusterIP
   ports:
-    - name: posts
+    - name: comments
       protocol: TCP
-      port: 4000
-      targetPort: 4000
+      port: 4001
+      targetPort: 4001

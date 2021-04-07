@@ -1,13 +1,3 @@
-MINIKUBE USES DOCKER DRIVER BY DEFAULT ON 'minikube start', so use
-* minikube start --vm=true
-OR * minikube start --driver=hyperv
-OR * minikube start --driver=virtualbox
-
-STARTING (after kubernetes enabled in docker app)
-    RUN 'kubectl version' to check if it is running
-
-mkdir infra\k8s (infrastructure and kubernetes) for the yaml files
-
 YAML FILE:
     '-' (dash) means array element,
     e.g.
@@ -15,6 +5,8 @@ YAML FILE:
           image: my_image
         - name: my_other_name
           image: my_other_image
+    
+    '---' (triple dash) for distinct objects in one yaml file
 
 COMMON KUBERNETES COMMANDs
     'kubectl apply -f <config_file_name>': tells kubernetes to process the config
@@ -30,7 +22,9 @@ COMMON KUBERNETES COMMANDs
     'kubectl delete deployment <deployment_name>': deletes deployment
     'kubectl describe deployment <deployment_name>': print out deployment info
 
-VERSION CONTROL & UPDATES FOR DEPLOYMENTS
+    in general, 'kubectl get <kind>' returns all running objects of that 'kind'.
+
+VERSION CONTROL & UPDATES & DEPLOYMENTS
     1. Build docker images with defaul 'latest' tag
     2. Push docker images to dockerhub using 'docker push <image_name>'
     3. Restart the deployment 'kubectl rollout restart deployment <deployment_name>
@@ -40,3 +34,50 @@ NETWORKING:
     Node Port: (For dev only) used to access pods from OUTSIDE the Cluster
     Load Balancer: Makes a pod available from outside the outside world
     External Name: Redirects an in-cluster request to a CNAME url.
+
+NodePort Service:
+
+    kind: Service
+    spec:
+        type: NodePort
+
+    When listed:
+        'posts-srv    NodePort    10.97.246.43   <none>        4000:31611/TCP   9s',
+        the 4000 is the port *in the kubernetes node* which the NodePort Service will direct to the pod (direct to port 4000 in the pod).
+        the 31611 is nodePort which we use to connect to the NodePort from outside the node.
+        * Client uses port 31611 (nodePort)
+        * Data enters the node
+        * the node passes the data to Port 4000 of the Node Port Service
+        * the Node Port Service passes the data to targetPort 4000 of the pod (targetPort defined in yaml).
+
+ClusterIP (expose a pod to other pods in the cluster)
+    Since this service is attached to a single pod (each pod get's their own ClusterIP), we added this
+    service config to the deployment yaml for each app (i.e. event-bus-depl.yaml configs both the deployment
+    object for event-bus and the cluster IP)
+
+    kind: Service
+    spec:
+        type: ClusterIP
+
+    If a different pod needs to access that IP, the use the name of the ClusterIP (and port), e.g., if 
+    app_one is listening on port 5000 with ClusterIP 'app-one-srv', then a pod could reach the app
+    with the url 'http://app-one-srv:5000/'
+
+Load Balancer Service:
+    Gets traffic to a single pod.
+
+    - use ingress-nginx (open source project) to create the Load Balancer Service & Ingress
+
+Ingress (and Ingress Controller):
+    A pod with a set of routing rules to distriute traffic to other services.
+
+    - use ingress-nginx (open source project) to create the Load Balancer Service & Ingress
+
+Load Balancer Service & Ingress:
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.45.0/deploy/static/provider/cloud/deploy.yaml
+
+    Update hosts  (development)
+        * for windows (C:\Windows\System32\drivers\etc\hosts)
+        * for mac (/etc/hosts)
+            - append '127.0.0.1 posts.com' to end of file. Note you need open notepad as administrator.
+            - Now if you go to posts.com/posts/ the browser runs a get request and the result should show up.

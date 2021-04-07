@@ -1,3 +1,5 @@
+# This is the yaml for the node port service (needed to communicate to the posts deployment)
+
 apiVersion: v1
 kind: Service
 metadata:
