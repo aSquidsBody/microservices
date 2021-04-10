@@ -1,0 +1,11 @@
+'npm install -g typescript ts-node'
+    * typescript is, of course, typescript
+    * ts-node is a cli tool which allows us to compile and execute typescript with one command at the terminal
+
+NEW COMMAND:
+    'tsc': typescript compiler
+        * 'tsc <my_file>.ts'
+    'ts-node': combines 'tsc' and 'node' to compile and run together
+
+FILE EXTENSION:
+    Use '.ts'
