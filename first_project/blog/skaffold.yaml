@@ -1,0 +1,70 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests: # tell skaffold to watch all files listed (handles creation and deletion of objects)
+      - ./infra/k8s/*
+build:
+  local:
+    push: false # on default, skaffold pushes up to dockerhub (not needed for skaffold)
+  artifacts: # stuff that skaffold needs to maintain (update on changes in the js files, see &&)
+    - image: joesjoski/client
+      context: client
+      docker:
+        dockerfile: dockerfile
+      sync:
+        manual:
+          # && if any .js files in src are changed, skaffold directly copy into the pod.
+          # If anything else is changed, the entire image will be rebuilt and re-deployed
+          - src: "src/**/*.js"
+            dest: .
+    - image: joesjoski/comments
+      context: comments
+      docker:
+        dockerfile: dockerfile
+      sync:
+        manual:
+          # && if any .js files are changed, skaffold directly copy into the pod.
+          # If anything else is changed, the entire image will be rebuilt and re-deployed
+          - src: "*.js"
+            dest: .
+    - image: joesjoski/event-bus
+      context: event-bus
+      docker:
+        dockerfile: dockerfile
+      sync:
+        manual:
+          # && if any .js files are changed, skaffold directly copy into the pod.
+          # If anything else is changed, the entire image will be rebuilt and re-deployed
+          - src: "*.js"
+            dest: .
+    - image: joesjoski/moderation
+      context: moderation
+      docker:
+        dockerfile: dockerfile
+      sync:
+        manual:
+          # && if any .js files are changed, skaffold directly copy into the pod.
+          # If anything else is changed, the entire image will be rebuilt and re-deployed
+          - src: "*.js"
+            dest: .
+    - image: joesjoski/posts
+      context: posts
+      docker:
+        dockerfile: dockerfile
+      sync:
+        manual:
+          # && if any .js files are changed, skaffold directly copy into the pod.
+          # If anything else is changed, the entire image will be rebuilt and re-deployed
+          - src: "*.js"
+            dest: .
+    - image: joesjoski/query
+      context: query
+      docker:
+        dockerfile: dockerfile
+      sync:
+        manual:
+          # && if any .js files are changed, skaffold directly copy into the pod.
+          # If anything else is changed, the entire image will be rebuilt and re-deployed
+          - src: "*.js"
+            dest: .

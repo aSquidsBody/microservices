@@ -1,0 +1,35 @@
+# This is the yaml for the client deployment
+
+apiVersion: apps/v1 # pods in v1, but we have deployment, so need apps/v1
+kind: Deployment
+metadata:
+  name: client-depl
+spec:
+  replicas: 1 # number of pods
+  selector: # select according to the following rule
+    matchLabels: # "look for all pods that are created with label 'app': client"
+      app: client
+
+  template:
+    # configure the pod
+    metadata:
+      labels:
+        app: client # assign label 'app': client
+    spec:
+      containers:
+        - name: client
+          image: joesjoski/client:latest # or joesjoski/client without the tag
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-srv
+spec:
+  selector: # select pods which traffic will be directed to (look for label)
+    app: client # label to look for
+  type: ClusterIP # (optional) Service defaults to type: ClusterIP
+  ports:
+    - name: client
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

@@ -81,3 +81,13 @@ Load Balancer Service & Ingress:
         * for mac (/etc/hosts)
             - append '127.0.0.1 posts.com' to end of file. Note you need open notepad as administrator.
             - Now if you go to posts.com/posts/ the browser runs a get request and the result should show up.
+
+AUTOMATE TASKS IN DEV:
+Skaffold:
+    * Makes it easy to update code in a running pod
+    * Makes it easy to create/delete all objects tied to a project as once
+    * skaffold.dev
+
+    1. Add skaffold.yaml to root directory (blog in first project)
+    2. Add config to it (see one in first_project\blog)
+    3. Run 'skaffold dev' in the directory which contains the skaffold.yaml file

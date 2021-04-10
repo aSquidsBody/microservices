@@ -4,15 +4,38 @@ metadata:
   name: ingress-srv
   annotations: # helps the ingress controller know we are feeding it routing rules
     kubernetes.io/ingress.class: nginx # the controller will look for this annotation
+    nginx.ingress.kubernetes.io/use-regex: "true" # to allow for regular expressions in http path
 spec:
   rules: # rules of how the ingress controller will route requests
     - host: posts.com
       http:
         paths:
-          - path: /posts
+          # will try to match paths in this order (so put react at the end)
+          - path: /posts/create
             pathType: Prefix
             backend:
               service:
                 name: posts-clusterip-srv
                 port:
                   number: 4000
+          - path: /posts
+            pathType: Prefix
+            backend:
+              service:
+                name: query-srv
+                port:
+                  number: 4002
+          - path: /posts/?(.*)/comments
+            pathType: Prefix
+            backend:
+              service:
+                name: comments-srv
+                port:
+                  number: 4001
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: client-srv
+                port:
+                  number: 3000

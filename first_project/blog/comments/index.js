@@ -17,6 +17,7 @@ app.get("/posts/:id/comments", (req, res) => {
 
 // Create a comment
 app.post("/posts/:id/comments", async (req, res) => {
+  console.log("Recieved a 'create comment'");
   const commentId = randomBytes(4).toString("hex");
 
   const { content } = req.body;
@@ -47,6 +48,8 @@ app.post("/posts/:id/comments", async (req, res) => {
 // Add event listening
 app.post("/events", async (req, res) => {
   const { type, data } = req.body;
+
+  console.log("Recieved event", type);
 
   if (type == "CommentModerated") {
     const { id, postId, status, content } = data;
