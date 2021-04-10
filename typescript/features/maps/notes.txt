@@ -1,0 +1,27 @@
+Using parcel bundler
+
+'npm install -g parcel-bundler'
+
+Don't need to create a package.json, 'parcel index.html will automatically set everything up'
+
+Randomly generate data
+  npmjs.com => search for 'faker'.
+  faker package has module address to randomly generate position data.
+  'npm install faker'
+
+  Since we are using a javascript module in a Typescript project
+    Need a typed naming scheme for the faker library. So we need to get it from Definitely Typed, 
+    probs called @types/faker
+    'npm install @types/faker'
+
+
+Google devs project
+  https:// console.developers.google.com
+
+  Create a project.
+  In menu, select API & Services > Library. Search for "maps javascript api". Enable.
+  In menu, select API & Services > Credentials. + Create Credentials
+    Generate an API key, and then include <script src="https://maps.googleapis.com/maps/api/js?key=<my_key>"></script>
+    above the existing script tags
+
+  Install @types/googlemaps (again, could be serched for at npmjs.com)
