@@ -1,0 +1,10 @@
+Start setup for the auth directory & app. Setup docker image and kubernetes deployment.
+
+Create the skaffold.yaml file.
+
+setup ingress-nginx for load balancer and load balancer service and ingeress service (ingress-srv.yaml).
+  Test api/users/currentuser (return 'hi there'), but chrome doesn't allow it: type 'thisisunsafe' in tab to make it through
+
+REQUEST BODY VALIDATION
+  Validate that the contents of a request are present:
+  'npm install express-validator'

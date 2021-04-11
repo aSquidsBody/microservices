@@ -1,0 +1,22 @@
+Services:
+  auth: everything relating to signup, signin, signout
+  tickets: ticket creation and editing. Knows whether a ticket can be updated
+  orders: order creation/editing
+  expiration: watches for orders to be created. Cancels them after 15 mins
+  payments: handles credit card payments. Cancels orders if payments fails, completes if payment succeeds
+
+Events:
+  UserCreated
+  UserUpdated
+  OrderCreated 
+  OrderCancelled 
+  OrderExpired
+  TicketCreated 
+  TicketUpdated
+  ChargeCreated
+
+Database: mongoDB
+
+Client: Next.js (serverside rendering for react.js)
+
+Event-bus: NATS Streaming Server

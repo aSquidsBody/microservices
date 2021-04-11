@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-depl
+spec:
+  replicas: 1
+
+  # purpose of the selector is to tell the deployment how to find all the pods it should make
+  selector:
+    matchLabels:
+      app: auth
+
+  # how to create each individual pod that the deployment will make
+  template:
+    metadata:
+      labels:
+        app: auth
+
+    # how the pod will behave
+    spec:
+      containers:
+        - name: auth
+          image: joesjoski/auth
+---
+# service to go with the deployment (default service is a clusterIP)
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-srv
+spec:
+  selector:
+    app: auth
+  ports:
+    - name: auth
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

@@ -1,0 +1,12 @@
+SOME IMPORTANT STEPS
+  'npm install typescript ts-node-dev express @types/express'
+  'tsc --init'  configure tsc
+
+  setup basic app on port 3000
+
+  create Dockerfile and .dockerignore
+  create auth-depl.yaml in the k8s directory for the deployment (& service in the same file)
+
+IMPORTANT APP INFO:
+  * Validate that the contents of a request are present:
+    'npm install express-validator'
