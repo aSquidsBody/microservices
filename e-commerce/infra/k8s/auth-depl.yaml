@@ -21,6 +21,12 @@ spec:
       containers:
         - name: auth
           image: joesjoski/auth
+          env:
+            - name: JWT_KEY # how it will be referenced IN THE CONTAINER
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY # what it was named IN THE KUBECTL COMMAND
 ---
 # service to go with the deployment (default service is a clusterIP)
 apiVersion: v1

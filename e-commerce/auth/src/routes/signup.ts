@@ -1,5 +1,10 @@
 import express, { Request, Response } from "express";
-import { body, validationResult } from "express-validator"; // apply as middleware
+import { body } from "express-validator"; // apply as middleware
+import jwt from "jsonwebtoken";
+
+import { validateRequest } from "../middlewares/validate-request";
+import { User } from "../models/user";
+import { BadRequestError } from "../errors/bad-request-error";
 
 const router = express.Router();
 
@@ -16,19 +21,37 @@ router.post(
       .isLength({ min: 4, max: 20 }) // length requirements
       .withMessage("Password must be between 4 and 20 characters"),
   ],
-  (req: Request, res: Response) => {
-    // Check if errors were appended to the request
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).send(errors.array()); // array() makes a json-safe array
-    }
-
+  validateRequest,
+  async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
-    console.log("Creating a user...");
+    const existingUser = await User.findOne({ email });
 
-    res.send({});
+    if (existingUser) {
+      throw new BadRequestError("Email in use");
+    }
+
+    const user = User.build({ email, password });
+    await user.save();
+
+    // generate JWT
+    const userJwt = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      // process.env is how to access an enviroment variable
+      process.env.JWT_KEY! // '!' tells Typescript that we are 100% sure that this value is defined
+    );
+
+    // Store it on the session object
+    // In js, use req.session.jwt = userJwt;
+    req.session = {
+      jwt: userJwt,
+    };
+
+    // 201 == record was created
+    res.status(201).send(user);
   }
 );
 

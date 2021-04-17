@@ -10,3 +10,13 @@ SOME IMPORTANT STEPS
 IMPORTANT APP INFO:
   * Validate that the contents of a request are present:
     'npm install express-validator'
+
+Cookie vs JWT:
+  Cookie:
+    * transport mechanism
+    * moves data between browser and server (not necesserily authorization)
+    * automatically managed by browser
+  JWT:
+    * For authentication
+    * stores any data we want
+    * is managed manually.

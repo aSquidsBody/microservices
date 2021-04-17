@@ -5,6 +5,93 @@ Create the skaffold.yaml file.
 setup ingress-nginx for load balancer and load balancer service and ingeress service (ingress-srv.yaml).
   Test api/users/currentuser (return 'hi there'), but chrome doesn't allow it: type 'thisisunsafe' in tab to make it through
 
+
 REQUEST BODY VALIDATION
   Validate that the contents of a request are present:
   'npm install express-validator'
+
+
+HANDLING ASYNC CODE IN ERRORS:
+  
+  We want:
+    app.all("*", async (req, res) => {
+      throw new NotFoundError();
+    });
+
+  not:
+    app.all("*", async (req, res, next) => {
+      next(new NotFoundError());
+    });
+
+  In order to handle errors this way, we need 'express-async-errors';
+  Add to index.ts 
+    import "express-async-errors"
+
+DATABASE
+  Use MongoDB
+    'npm install mongoose'
+    
+    Needs a yaml file for it as a deployment: '<service>-mongo-depl.yaml'
+
+    Mongoose model definition has issues with Typescript:
+      Solution: see 'auth/srv/models/user.ts'
+
+AUTHENTICATION:
+  Cookies will not be encrypted (Json Web Tokens are tamper proof automatically and we are not sending
+    secure data over a cookie).
+  Use node package jsonwebtoken to create the web tokens (also @types/jsonwebtoken).
+
+  Decode session cookie using Base64 Decoder. Then use the jwt.io tool to validate the json web token
+
+SECRETS:
+  Create a secret using kubernetes:
+
+    'kubectl create secret generic <secret-name> --from-literal=<key>=<value>'
+  
+    * Generic secret: this is for all-purpose secrets
+    * secret-name: the name of the secret (we used jwt-secret)
+
+    (Look in secret location for my secret)
+
+    View secrets with:
+      'kubectl get secrets'
+
+    Put secret in the pods as environment variable:
+      See 'infra/k8s/auth-depl.yaml'.
+      Search for 'JWT_KEY'
+
+TESTING:
+  Use library 'Jest'
+
+  Add script:
+    * "test": "jest --watchAll --no-cache"
+      * --watchAll (run all tests in the project when files change)
+      * --no-cache (jest doesn't work with ts, this no-cache flag will help deal with changes that jest doesnt see)
+
+  Add to package.json:
+    * "jest": {
+        "preset": "ts-jest",
+        "testEnvironment": "node",
+        "setupFilesAfterEnv": [
+          "./src/test/setup.ts"
+        ]
+      },
+
+  Will:
+    Start an in-memory copy of MongoDB
+    start up our express app
+    use 'supertest' library to make fake requests to our express app
+
+  Run 'npm install --save-dev @types/jest @types/supertest jest ts-jest supertest mongodb-memory-server'
+
+    --save-dev: we don't want the test stuff in the docker image (since mongodb-memory-server is large), so 
+                the Dockerfile will be marked to ignore these dev packages
+
+    jest: javascript TESTING
+
+    supertest: HTTP assertions made easy via superagent.
+
+    mongodb-memory-server: runs a copy of mongo in memory. Easily test multiple databases at the same time
+                           Allows us to test multiple services with their own databases at the same time.
+    
+
