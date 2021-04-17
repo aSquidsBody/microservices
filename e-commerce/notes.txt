@@ -62,6 +62,7 @@ SECRETS:
 
 TESTING:
   Use library 'Jest'
+  'ts-jest' is what allows for typescript work. If a test fails, then I fix it, but it still fails, just restart jest.
 
   Add script:
     * "test": "jest --watchAll --no-cache"
@@ -93,5 +94,4 @@ TESTING:
 
     mongodb-memory-server: runs a copy of mongo in memory. Easily test multiple databases at the same time
                            Allows us to test multiple services with their own databases at the same time.
-    
 

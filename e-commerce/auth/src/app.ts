@@ -21,7 +21,8 @@ app.use(
   // creates .session object in request objects
   cookieSession({
     signed: false, // not encrypted
-    secure: true, // only allow over https connections
+    // if true: only allow cookies over https connections, else allow for insecure connection
+    secure: process.env.NODE_ENV !== "test",
   })
 );
 
