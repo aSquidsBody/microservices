@@ -1,45 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: client-depl
 spec:
   replicas: 1
 
   # purpose of the selector is to tell the deployment how to find all the pods it should make
   selector:
     matchLabels:
-      app: auth
+      app: client
 
   # how to create each individual pod that the deployment will make
   template:
     metadata:
       labels:
-        app: auth
+        app: client
 
     # how the pod will behave
     spec:
       containers:
-        - name: auth
-          image: joesjoski/auth
-          env:
-            - name: MONGO_URI
-              value: "mongodb://auth-mongo-srv:27017/auth"
-            - name: JWT_KEY # how it will be referenced IN THE CONTAINER
-              valueFrom:
-                secretKeyRef:
-                  name: jwt-secret
-                  key: JWT_KEY # what it was named IN THE KUBECTL COMMAND
+        - name: client
+          image: joesjoski/client
 ---
 # service to go with the deployment (default service is a clusterIP)
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: client-srv
 spec:
+  # How the service finds the pods that it governs
   selector:
-    app: auth
+    app: client
+
   ports:
-    - name: auth
+    - name: client # this name is just for logging purposes
       protocol: TCP
-      port: 3000
+      port: 3000 # Next.js by default looks at this file
       targetPort: 3000

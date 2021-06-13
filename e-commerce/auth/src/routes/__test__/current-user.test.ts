@@ -1,9 +1,8 @@
 import request from "supertest";
 import { app } from "../../app";
-import { signup } from "../../test/authHelper";
 
 it("responds with details about the current user", async () => {
-  const cookie = await signup();
+  const cookie = global.signup();
 
   const response = await request(app)
     .get("/api/users/currentuser")

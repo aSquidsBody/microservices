@@ -17,3 +17,19 @@ build:
         manual:
           - src: "src/**/*.ts" # these files are synced without restarting the entire pod
             dest: . # where to sync inside the running container
+    - image: joesjoski/client
+      context: client # folder which contains this code
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "**/*.js" # these files are synced without restarting the entire pod
+            dest: . # where to sync inside the running container
+    - image: joesjoski/tickets
+      context: tickets # folder which contains this code
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts" # these files are synced without restarting the entire pod
+            dest: . # where to sync inside the running container

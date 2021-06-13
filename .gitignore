@@ -14,5 +14,9 @@ typescript/features/maps/node_modules/
 typescript/features/maps/.cache/
 
 e-commerce/auth/node_modules/
+e-commerce/client/node_modules/
+e-commerce/tickets/node_modules/
+e-commerce/common/node_modules/
+e-commerce/client/.next/
 
 secrets.txt

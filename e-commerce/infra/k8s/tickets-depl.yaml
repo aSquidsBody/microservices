@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: tickets-depl
 spec:
   replicas: 1
 
   # purpose of the selector is to tell the deployment how to find all the pods it should make
   selector:
     matchLabels:
-      app: auth
+      app: tickets
 
   # how to create each individual pod that the deployment will make
   template:
     metadata:
       labels:
-        app: auth
+        app: tickets
 
     # how the pod will behave
     spec:
       containers:
-        - name: auth
-          image: joesjoski/auth
+        - name: tickets
+          image: joesjoski/tickets
           env:
             - name: MONGO_URI
-              value: "mongodb://auth-mongo-srv:27017/auth"
+              value: "mongodb://tickets-mongo-srv:27017/tickets" # recall, the value after the slash refers to the database name
             - name: JWT_KEY # how it will be referenced IN THE CONTAINER
               valueFrom:
                 secretKeyRef:
@@ -34,12 +34,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: tickets-srv
 spec:
   selector:
-    app: auth
+    app: tickets
   ports:
-    - name: auth
+    - name: tickets
       protocol: TCP
       port: 3000
       targetPort: 3000

@@ -1,5 +1,6 @@
 SOME IMPORTANT STEPS
   'npm install typescript ts-node-dev express @types/express'
+  LATER: 'npm install @asquidsbody/common'
   'tsc --init'  configure tsc
 
   setup basic app on port 3000

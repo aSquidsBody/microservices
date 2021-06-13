@@ -95,3 +95,63 @@ TESTING:
     mongodb-memory-server: runs a copy of mongo in memory. Easily test multiple databases at the same time
                            Allows us to test multiple services with their own databases at the same time.
 
+NAMESPACES:
+  'kubectl get namespaces'
+  'kubectl get services -n <namespace>'
+
+  In my case, there is a LoadBalancer called ingress-nginx-controller in ingress-nginx.
+  So to reach out to this service in a container in the cluster
+    use: 'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local'
+    with header: 'Host: <hostname_from_ingress-srv.yaml>'
+
+REUSED CODE:
+  We will have a common library that we will publish to npm registry
+
+  Security:
+    If there is sensitive information in our common library, we don't have to publish to the public registry 
+      Can publish to public/private Organization registry, or a private registry (invite only).
+    
+    We will use a public organization registry.
+
+  Name format:
+    '@<organization>/<package_name>'
+
+  Publish:
+    1. Create a git repo inside the package (package.json level)
+      'git init'
+      'git add .'
+      'git commit -m "first commit"'
+    2. Publish using the npm publish command
+      'npm publish --access public' // note it defaults to private registry, hence the public option
+    3. (FIRST TIME) Setup typescript configurations
+      'tsc --init' to create a tsconfig.json file
+      'npm install typescript del-cli --save-dev' (note the --save-dev, these are not to be published)
+    4. (FIRST TIME) Configure the tsconfig
+      a. Add "build": "npm run clean && tsc" in the package.json
+      b. Uncomment the following lines from tsconfig.json
+        i. "declaration": true, 
+        ii. "outDir": "./",  (CHANGE THE VALUE TO "./build")
+    5. (FIRST TIME) Setup delete script
+      Add "clean": "del ./build/*" to package.json (why we needed del-cli)
+    6. (FIRST TIME) Indicate the files to be published
+      a. Change"main": "./build/index.js", in package.json (since the index.js has been moved)
+      b. Add "types": "./build/index.d.ts", in package.json
+      c. Add "files": [
+                    "build/**/*"
+                  ], 
+        (indicates which files are 100% to be included in the published package)
+    7. (FIRST TIME) Configure .gitignore to ignore the build/ and node_modules/ directories
+    8. Publish
+      a. Add and commit to git the changes you want.
+      b. When ready to publish, update the version number in package.json
+      c. Run 'npm publish'
+  
+  Typescript:
+    Our common library will be written in Typescript but published in Javascript
+
+  INSTALL:
+    'npm install <package_name>' (including organization)
+
+  UPDATE:
+    'npm update <package_name>' (including organization)
+

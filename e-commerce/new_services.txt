@@ -1,0 +1,5 @@
+DOCKER & KUBERNETES:
+    1. Create Dockerfile and push image to dockerhub
+    2. Create <service>-depl.yaml (& database yaml if needed)
+    3. Update skaffold.yaml
+    4. Update ingress-srv.yaml (if needed)

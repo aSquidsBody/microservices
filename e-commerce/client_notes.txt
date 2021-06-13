@@ -1,0 +1,45 @@
+Creating react app not using 'npx create-react-app', but rather
+    'npm init -y'
+    'npm install react react-dom next axios'
+This is because we are doing serverside rendering
+
+TYPESCRIPT:
+    Next can work with typescript; however, this app is simple enough that we don't need to worry about it.
+
+PAGES:
+    the folder 'pages' line up to exact routes in the app.
+
+DOCKER & KUBERNETES:
+    1. Create Dockerfile and push image to dockerhub
+    2. Create client-depl.yaml
+    3. Update skaffold.yaml
+    4. Update ingress-srv.yaml
+
+FILE UPDATE DETECTION:
+    Is iffy in docker container.
+    Deal with the issue in next.config.js. Poll all the files in the application automatically every 300 ms.
+
+CSS AND _APP:
+    You can only import global css into the _app.js file. So a custom Component wrapper must be made in _app.js
+    to use global css. See github.com/zeit/next.js/blob/master/errors/css-global.md
+
+    Using bootsrap 'npm install bootstrap'
+
+<Component>.getInitialProps = (context) => {}
+
+    Arguments:
+        context === { req, res } in a PAGE Component
+        appContext === [ 'AppTree', 'Component', 'router', 'ctx': { req, res }] in Custom App COmponent (e.g. _app.js)
+
+    Function (specific to Next.js) which allows us to assign props to a component *while* rendering on the server.
+    The return values of the function are passed as props.
+    NOTE: this function also runs whenever the page is opened as a new page ON THE CLIENT SIDE.
+
+    We *CANNOT* make data requests in the components themselves. They are rendered ONE single time, so we can't 
+    make a request and wait for data. We need to use getInitialProps.
+
+    MULTIPLE getInitialProps:
+        If getInitialProps is called on _app, then it is NOT automatically called on each Component.
+        However, since the Component is included in the _app parameters, we can invoke the getInitialProps directly
+            (see pages/_app.js)
+
